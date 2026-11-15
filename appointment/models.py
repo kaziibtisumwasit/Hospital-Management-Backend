@@ -25,7 +25,7 @@ class Appointment(models.Model):
     appointment_status = models.CharField(max_length=100, choices=APPOINTMENT_STATUS , default="Pending") ## default value is False. If the appointment is not confirmed, the status will be False. If the appointment is confirmed, the status will be True.
     appointment_type = models.CharField(max_length=100 , choices= APPPOINTMENT_TYPE) ## choices is used to limit the values that can be stored in the field. In this case, the types field can only have two values: 'online' or 'offline'.
     symptoms = models.TextField()
-    time = models.OneToOneField(AvailableTime , on_delete = models.CASCADE)
+    time = models.ForeignKey(AvailableTime , on_delete = models.CASCADE)
     cancel = models.BooleanField(default=False) ## default value is False. If the appointment is not cancelled, the value will be False. If the appointment is cancelled, the value will be True. 
     
     
