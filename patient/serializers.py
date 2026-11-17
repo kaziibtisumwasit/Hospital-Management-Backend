@@ -48,3 +48,12 @@ class PatientRegistrationSerializer(serializers.ModelSerializer):
         new_account.is_active = False  # Set the user as inactive until email verification  
         new_account.save()
         return new_account
+    
+    
+    
+    
+    
+    
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(write_only=True)

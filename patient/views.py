@@ -2,15 +2,17 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from .models import Patient
-from .serializers import PatientSerializer , PatientRegistrationSerializer 
+from .serializers import PatientSerializer , PatientRegistrationSerializer , UserLoginSerializer
 from rest_framework.response import Response
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode , urlsafe_base64_decode ## ek language thke onno language e convert kortesi
 from django.utils.encoding import force_bytes # it's a function which is make more effecient encording
-
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 from django.contrib import messages
+from rest_framework.authtoken.models import Token
+
 ##For Sending  Email
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -69,9 +71,28 @@ def activate_account(request, uid64 , token):
         user.is_active = True
         user.save()
         messages.success(request, 'Your account has been activated successfully. You can now log in.')
-        return redirect('patient-register') 
+        return redirect('patient-login') 
     else:
         messages.error(request, 'Activation link is invalid!')
         return redirect('patient-register')
-        
+
+
+
+class userLoginApiView(APIView):
+    def post(self,request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+            
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                # login(request, user)
+                # return Response({'message': 'Login successful'})
+                token , _ = Token.objects.get_or_create(user=user) # if object exists then get it otherwise create it
+                return Response({'token': token.key , 'user_id' : user.id})
+            else:
+                return Response({'error': 'Invalid credentials'}, status=400)
+        return Response(serializer.errors, status=400)     
 
