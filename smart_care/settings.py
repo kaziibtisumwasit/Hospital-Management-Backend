@@ -148,3 +148,13 @@ MEDIA_URL = '/media/'
 
 # Specify the directory where media files are stored
 # MEDIA_ROOT = BASE_DIR / 'media' # for globally media root
+
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}

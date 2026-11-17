@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode , urlsafe_base64_decode ## ek language thke onno language e convert kortesi
 from django.utils.encoding import force_bytes # it's a function which is make more effecient encording
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 from django.contrib import messages
@@ -88,7 +88,7 @@ class userLoginApiView(APIView):
             user = authenticate(username=username, password=password)
             
             if user is not None:
-                # login(request, user)
+                login(request, user)
                 # return Response({'message': 'Login successful'})
                 token , _ = Token.objects.get_or_create(user=user) # if object exists then get it otherwise create it
                 return Response({'token': token.key , 'user_id' : user.id})
@@ -96,3 +96,16 @@ class userLoginApiView(APIView):
                 return Response({'error': 'Invalid credentials'}, status=400)
         return Response(serializer.errors, status=400)     
 
+
+## At Login time we give new token to user & save the tocken on te database,& When user logout then we delete the token from the database. So that user can't access the API without login again.We use tocken creation & deltetion process for security purpose. If we don't delete the token then user can access the API without login again. So we delete the token from the database when user logout.
+
+
+class userLogoutView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            request.user.auth_token.delete()  # Delete the user's token to log them out
+            logout(request)  # Log out the user from the session
+            messages.success(request, 'You have been logged out successfully.')
+            return redirect('patient-login')  # Redirect to the login page after logout
+        else:
+            return Response({'error': 'User is not authenticated'}, status=400)
