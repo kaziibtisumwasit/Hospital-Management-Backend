@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-030r-xzs(b4ufkf%-7--#c2&4h_!ys8+l56k5vdu1pr)4sw#gd
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]  ## For All Host
-
+CSRF_TRUSTED_ORIGINS = ["https://smart-care-o26k.onrender.com", "http://*.127.0.0.1"]
 
 # Application definition
 
@@ -139,8 +139,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env("EMAIL", default="")
-EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD", default="")
+EMAIL_HOST_USER = env("EMAIL")
+EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD")
 
 
 # Define the base URL for serving media files
