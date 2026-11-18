@@ -14,8 +14,8 @@ APPOINTMENT_STATUS = [
 ]
 
 APPPOINTMENT_TYPE = [
-    ('online' , 'online'),
-    ('offline' , 'offline'),
+    ('Online' , 'Online'),
+    ('Offline' , 'Offline'),
 ]
 
 class Appointment(models.Model):
